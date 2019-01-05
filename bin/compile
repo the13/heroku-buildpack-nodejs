@@ -19,6 +19,15 @@ ENV_DIR=${3:-}
 BP_DIR=$(cd "$(dirname ${0:-})"; cd ..; pwd)
 STDLIB_FILE=$(mktemp -t stdlib.XXXXX)
 
+### Change BUILD_DIR based on PROJECT_PATH
+
+if [ -f $ENV_DIR/PROJECT_PATH ]; then
+	PROJECT_PATH=`cat $ENV_DIR/PROJECT_PATH`
+	if [ -d $BUILD_DIR/$PROJECT_PATH ]; then
+    BUILD_DIR=$BUILD_DIR/$PROJECT_PATH
+  fi
+fi
+
 ### Load dependencies
 
 curl --silent --retry 5 --retry-max-time 15 'https://lang-common.s3.amazonaws.com/buildpack-stdlib/v7/stdlib.sh' > "$STDLIB_FILE"
